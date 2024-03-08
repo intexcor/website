@@ -1,0 +1,54 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+.top-bar {
+    background-color: orange;
+    width: 100%;
+    padding: 15px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cart-icon img,
+.login-icon img {
+    width: 30px;
+    height: 30px;
+}
+
+.search-bar {
+    flex-grow: 1;
+    margin: 0 auto; /* Центрируем поле поиска */
+    position: relative;
+    text-align: center; /* Выравниваем текст внутри по центру */
+}
+
+.search-input {
+    width: 50vw; /* Устанавливаем ширину поля ввода в 50% ширины экрана */
+    max-width: 500px; /* Ограничиваем максимальную ширину поля ввода */
+    padding: 10px;
+    border: none;
+    border-radius: 20px;
+    background-color: rgba(255, 255, 255, 0.8); /* Чуть бледный оттенок */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 16px;
+    outline: none;
+}
+
+.cart-icon {
+    position: absolute;
+    right: calc(100% - 50px); /* Позиционируем значок корзины справа */
+}
+
+@media only screen and (max-width: 600px) {
+    .search-input {
+        width: 80%; /* Уменьшаем ширину поля для мобильных устройств */
+    }
+}
