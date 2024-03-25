@@ -1,2 +1,4 @@
 flask
 aiogram
+flask-sqlalchemy
+pyjwt

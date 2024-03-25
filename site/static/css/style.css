@@ -47,6 +47,36 @@ body {
     right: calc(100% - 50px); /* Позиционируем значок корзины справа */
 }
 
+
+/* Стили для текстовых полей */
+.input-field {
+    margin-bottom: 20px; /* Увеличиваем отступ снизу */
+    padding: 15px; /* Увеличиваем внутренние отступы */
+    border: 1px solid #ccc;
+    border-radius: 8px; /* Увеличиваем радиус закругления */
+}
+/* Стили для кнопки "Войти" */
+.user-widget a {
+    background-color: #ff5722; /* Оранжевый цвет фона */
+    color: #fff; /* Белый цвет текста */
+    padding: 10px 20px; /* Отступы внутри кнопки */
+    border: none; /* Убираем границу */
+    border-radius: 20px; /* Закругляем углы */
+    font-size: 16px; /* Размер текста */
+    text-decoration: none; /* Убираем подчеркивание */
+}
+
+.user-widget a:hover {
+    background-color: #f4511e; /* Оранжевый цвет фона при наведении */
+}
+
+/* Отступ кнопки "Войти" справа */
+.user-widget {
+    margin-right: 30px;
+    flex-shrink: 0; /* Запрещаем сжатие блока, чтобы он не выходил за пределы */
+}
+
+
 @media only screen and (max-width: 600px) {
     .search-input {
         width: 80%; /* Уменьшаем ширину поля для мобильных устройств */

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Профиль</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/profile.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+    {% extends "base.html" %}
+    {% block content %}
+   <div class="profile-container">
+        <h2>Профиль пользователя: {{ user_name }}</h2>
+        <div class="avatar">
+            <img src="{{ url_for('static', filename='img/avatars/' + user_avatar) }}" alt="Avatar">
+        </div>
+        <form action="/upload_avatar" method="post" enctype="multipart/form-data">
+            <input type="file" name="avatar">
+            <button type="submit">Загрузить аватарку</button>
+        </form>
+        <a href="/logout">Выйти</a>
+    </div>
+    {% endblock %}
+</body>
+</html>

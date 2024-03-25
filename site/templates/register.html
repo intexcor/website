@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/login.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+    {% extends "base.html" %}
+    {% block content %}
+   <div class="login-container">
+    <h2>Регистрация</h2>
+
+    <form action="/register" method="post" enctype="multipart/form-data">
+    <label for="username">Имя пользователя:</label>
+    <input type="text" id="username" name="username" class="input-field" required>
+
+    <label for="password">Пароль:</label>
+    <input type="password" id="password" name="password" class="input-field" required>
+
+    <label for="avatar">Выберите аватар (необязательно):</label>
+    <input type="file" id="avatar" name="avatar" accept="image/*">
+
+    {% if error_message %}
+    <div style="color: red;">{{ error_message }}</div>
+    {% endif %}
+    <button type="submit">Регистрация</button>
+    <p>Есть аккаунт? <a href="/login">Войти</a></p>
+</form>
+</div>
+    {% endblock %}
+
+</body>
+</html>
