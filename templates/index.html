@@ -13,7 +13,7 @@
                 <div class="block">
                     <a href="/product/{{ item.id }}">
                         <div class="rasp">
-                                <img class="img_t" src="{{ url_for('static', filename='img/products/' + item.img_prod) }}">
+                                <img class="img_t" src="{{ url_for('static', filename='img/' + item.img_prod) }}">
                                 <h2>{{ item.name }}</h2>
                                 <div>
                                     Описание: {{item.description}}

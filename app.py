@@ -1,14 +1,13 @@
 import datetime
 import os
 import random
-from flask import Flask, render_template, redirect, abort, request, jsonify
+from flask import Flask, render_template, redirect, request, jsonify
 
 from forms.user import RegisterForm
-from data import db_session, jobs_api, users_api
+from data import db_session
 from data.users import User
 from data.products import Product
-from data.reviews import Reviews
-from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+from flask_login import LoginManager, login_user, login_required, logout_user
 from forms.product import ProductFrom
 
 from forms.loginforn import LoginForm
@@ -26,7 +25,7 @@ login_manager.init_app(app)
 
 
 @app.errorhandler(404)
-def not_found(error):
+def not_found(_error):
     return make_response(jsonify({'error': 'Not found'}), 404)
 
 
@@ -41,7 +40,7 @@ def load_user(user_id):
     return db_sess.query(User).get(user_id)
 
 
-@app.route('/product',  methods=['GET', 'POST'])
+@app.route('/product', methods=['GET', 'POST'])
 @login_required
 def add_jobs():
     form = ProductFrom()
@@ -61,123 +60,13 @@ def add_jobs():
         return redirect('/')
     return render_template('product.html', title='Добавление товара',
                            form=form)
-#
-#
-# @app.route('/jobs/<int:id>', methods=['GET', 'POST'])
-# @login_required
-# def edit_jobs(id):
-#     form = JobsForm()
-#     if request.method == "GET":
-#         db_sess = db_session.create_session()
-#         jobs = db_sess.query(Jobs).filter(Jobs.id == id,
-#                                           Jobs.team_leader == current_user.id or current_user.id == 1
-#                                           ).first()
-#         if jobs:
-#             form.team_lead.data = jobs.team_leader
-#             form.job.data = jobs.job
-#             form.worksize.data = jobs.work_size
-#             form.collaborators.data = jobs.collaborators
-#             form.start_date.data = jobs.start_date
-#             form.end_date.data = jobs.end_date
-#             form.is_finished.data = jobs.is_finished
-#         else:
-#             abort(404)
-#     if form.validate_on_submit():
-#         db_sess = db_session.create_session()
-#         jobs = db_sess.query(Jobs).filter(Jobs.id == id,
-#                                           Jobs.team_leader == current_user.id or current_user.id == 1
-#                                           ).first()
-#         if jobs:
-#             jobs.team_leader = form.team_lead.data
-#             jobs.job = form.job.data
-#             jobs.work_size = form.worksize.data
-#             jobs.collaborators = form.collaborators.data
-#             jobs.start_date = form.start_date.data
-#             jobs.end_date = form.end_date.data
-#             jobs.is_finished = form.is_finished.data
-#             db_sess.commit()
-#             return redirect('/')
-#         else:
-#             abort(404)
-#     return render_template('product.html',
-#                            title='Редактирование новости',
-#                            form=form
-#                            )
-#
-#
-# @app.route('/jobs_delete/<int:id>', methods=['GET', 'POST'])
-# @login_required
-# def jobs_delete(id):
-#     db_sess = db_session.create_session()
-#     jobs = db_sess.query(Jobs).filter(Jobs.id == id,
-#                                       Jobs.user == current_user
-#                                       ).first()
-#     if jobs:
-#         db_sess.delete(jobs)
-#         db_sess.commit()
-#     else:
-#         abort(404)
-#     return redirect('/')
-#
-#
+
+
 @app.route("/")
 def index():
     db_sess = db_session.create_session()
     producti = db_sess.query(Product).all()
     return render_template("index.html", products=producti, title='Главная')
-
-
-#
-#
-# @app.route('/departments_add/<int:id>', methods=['GET', 'POST'])
-# @login_required
-# def edit_deps(id):
-#     form = DepartmentForm()
-#     if request.method == "GET":
-#         db_sess = db_session.create_session()
-#         deps = db_sess.query(Department).filter(Department.id == id,
-#                                           Jobs.team_leader == current_user.id or current_user.id == 1
-#                                           ).first()
-#         if deps:
-#             form.title.data = deps.title
-#             form.chief.data = deps.chief
-#             form.members.data = deps.members_ids
-#             form.email.data = deps.email
-#         else:
-#             abort(404)
-#     if form.validate_on_submit():
-#         db_sess = db_session.create_session()
-#         deps = db_sess.query(Department).filter(Department.id == id,
-#                                           Jobs.team_leader == current_user.id or current_user.id == 1
-#                                           ).first()
-#         if deps:
-#             deps.title = form.title.data
-#             deps.chief = form.chief.data
-#             deps.members_ids = form.members.data
-#             deps.email = form.email.data
-#             db_sess.commit()
-#             return redirect('/departments')
-#         else:
-#             abort(404)
-#     return render_template('departments.html',
-#                            title='Редактирование департамента',
-#                            form=form
-#                            )
-#
-#
-# @app.route('/departments_delete/<int:id>', methods=['GET', 'POST'])
-# @login_required
-# def deps_delete(id):
-#     db_sess = db_session.create_session()
-#     deps = db_sess.query(Department).filter(Department.id == id,
-#                                       Department.chief == current_user.id
-#                                       ).first()
-#     if deps:
-#         db_sess.delete(deps)
-#         db_sess.commit()
-#     else:
-#         abort(404)
-#     return redirect('/departments')
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -237,8 +126,6 @@ def reqister():
 
 
 def main():
-    # app.register_blueprint(jobs_api.blueprint)
-    # app.register_blueprint(users_api.blueprint)
     app.run(port=8000)
 
 
