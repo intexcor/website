@@ -3,3 +3,4 @@ aiogram
 flask-sqlalchemy
 pyjwt
 flask_login
+flask_wtf
