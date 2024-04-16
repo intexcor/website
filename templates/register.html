@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block content %}
+<br>
+<div class="login">
+    <span class="login_name roboto-medium">Регистрация</span><br>
+    <a class="btn btn-dark roboto-medium" href="/login">Уже есть аккаунт? Вход→</a>
+    <br><br>
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.image_prof.label(class="roboto-medium text_login-reg") }}<br>
+            {{ form.image_prof }}<br>
+            {% for error in form.image_prof.errors %}
+                <p class="alert alert-danger" role="alert">
+                    {{ error }}
+                </p>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.name.label(class="roboto-medium text_login-reg") }}<br>
+            {{ form.name(class="form-control polya_vvod", placeholder="Иван") }}<br>
+            {% for error in form.name.errors %}
+                <p class="alert alert-danger" role="alert">
+                    {{ error }}
+                </p>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.surname.label(class="roboto-medium text_login-reg") }}<br>
+            {{ form.surname(class="form-control polya_vvod", placeholder="Иванов") }}<br>
+            {% for error in form.surname.errors %}
+                <p class="alert alert-danger" role="alert">
+                    {{ error }}
+                </p>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.lastname.label(class="roboto-medium text_login-reg") }}<br>
+            {{ form.lastname(class="form-control polya_vvod", placeholder="Иванович")}}<br>
+            {% for error in form.lastname.errors %}
+                <p class="alert alert-danger" role="alert">
+                    {{ error }}
+                </p>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.email.label(class="roboto-medium text_login-reg") }}<br>
+            {{ form.email(class="form-control polya_vvod", type="email", placeholder="name@example.com") }}<br>
+            {% for error in form.email.errors %}
+                <p class="alert alert-danger" role="alert">
+                    {{ error }}
+                </p>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.password.label(class="roboto-medium text_login-reg") }}<br>
+            {{ form.password(class="form-control polya_vvod", type="password") }}<br>
+            {% for error in form.password.errors %}
+                <p class="alert alert-danger" role="alert">
+                    {{ error }}
+                </p>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.password_again.label(class="roboto-medium text_login-reg") }}<br>
+            {{ form.password_again(class="form-control polya_vvod", type="password") }}<br>
+            {% for error in form.password_again.errors %}
+                <p class="alert alert-danger" role="alert">
+                    {{ error }}
+                </p>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit(type="submit", class="btn btn-dark btn_size roboto-medium") }}</p>
+            <div class="login_name roboto-medium">{{ message }}</div>
+    </form>
+</div>
+{% endblock %}

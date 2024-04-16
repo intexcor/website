@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+<br>
+<div class="login">
+    <span class="login_name roboto-medium">Добавление товара</span><br>
+    <br><br>
+    <form action="" method="post" enctype=multipart/form-data>
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.img_prod.label(class="roboto-medium text_login-reg") }}<br>
+            {{ form.img_prod }}<br>
+            {% for error in form.img_prod.errors %}
+                <p class="alert alert-danger" role="alert">
+                    {{ error }}
+                </p>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.name_ooo.label(class="roboto-medium text_login-reg") }}<br>
+            {{ form.name_ooo(class="form-control polya_vvod") }}<br>
+            {% for error in form.name_ooo.errors %}
+                <p class="alert alert-danger" role="alert">
+                    {{ error }}
+                </p>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.description.label(class="roboto-medium text_login-reg") }}<br>
+            {{ form.description(class="form-control polya_vvod", placeholder="Нет описания") }}<br>
+            {% for error in form.description.errors %}
+                <p class="alert alert-danger" role="alert">
+                    {{ error }}
+                </p>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.price.label(class="roboto-medium text_login-reg") }}<br>
+            {{ form.price(class="form-control polya_vvod", type="number") }}<br>
+            {% for error in form.price.errors %}
+                <p class="alert alert-danger" role="alert">
+                    {{ error }}
+                </p>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit(type="submit", value="Send form", class="btn btn-dark btn_size roboto-medium") }}</p>
+            <div class="login_name roboto-medium">{{ message }}</div>
+    </form>
+</div>
+{% endblock %}

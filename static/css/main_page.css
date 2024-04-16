@@ -1,0 +1,36 @@
+.brand_name {
+    font-size: 38px;
+}
+
+.roboto-medium {
+    font-family: "Roboto", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+}
+
+.btn_log_in {
+    font-size: 22px;
+    margin-top: 7px;
+}
+
+.form-poisk {
+    display: flex;
+}
+
+.poisk {
+    width: 450px;
+    margin-top: 10px;
+}
+
+body {
+    background-color: #9b9b9b;
+    margin: 0;
+}
+
+main {
+    left: 0;
+}
+
+header {
+    background-color: #494949
+}

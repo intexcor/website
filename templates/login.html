@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+<br>
+    <div class="login">
+        <span class="login_name roboto-medium">Вход</span><br>
+        <a class="btn btn-dark roboto-medium" href="/register">Еще не зарегистрированы? Зарегистрироваться→</a>
+        <br><br>
+        <form action="" method="post">
+            {{ form.hidden_tag() }}
+            <p>
+                {{ form.email.label(class="roboto-medium text_login-reg") }}<br>
+                {{ form.email(class="form-control polya_vvod", type="email", placeholder="name@example.com") }}<br>
+                {% for error in form.email.errors %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </div>
+                {% endfor %}
+            </p>
+            <p>
+                {{ form.password.label(class="roboto-medium text_login-reg") }}<br>
+                {{ form.password(class="form-control polya_vvod", type="password") }}<br>
+                {% for error in form.password.errors %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </div>
+                {% endfor %}
+            </p>
+            <p>{{ form.remember_me() }} {{ form.remember_me.label(class="roboto-medium text_login-reg") }}</p>
+            <p>{{ form.submit(type="submit", class="btn btn-dark btn_size roboto-medium") }}</p>
+            <div class="polya_vvod roboto-medium">{{ message }}</div><br>
+        </form>
+    </div>
+{% endblock %}
