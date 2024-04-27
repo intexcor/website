@@ -5,15 +5,12 @@
 <a href="/product">ссфлка товар</a>
 <table class="table__">
         {% for item in products%}
-        {% if item.id % 6 == 0 %}
-            <tr>
-            </tr>
-        {% endif %}
+
             <th>
                 <div class="block">
                     <a href="/product/{{ item.id }}">
                         <div class="rasp">
-                                <img class="img_t" src="{{ url_for('static', filename='img/' + item.img_prod) }}">
+                                <img class="img_t" src="{{ url_for('static', filename='img/products/' + item.img_prod) }}">
                                 <h2>{{ item.name }}</h2>
                                 <div>
                                     Описание: {{item.description}}
@@ -22,9 +19,11 @@
                     </a>
             </div>
             </th>
-
+        {% if item.id % 4 == 0 %}
+            <tr>
+            </tr>
+        {% endif %}
         {% endfor %}
 </table>
 </div>
-
 {% endblock %}
