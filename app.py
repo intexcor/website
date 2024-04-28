@@ -211,9 +211,9 @@ def logout():
     return redirect("/")
 
 
-@app.route('/profile')
+@app.route('/profile', methods=['GET', 'POST'])
 def profile():
-    return redirect("/")
+    return render_template('profile.html')
 
 
 @app.route('/register', methods=['GET', 'POST'])
