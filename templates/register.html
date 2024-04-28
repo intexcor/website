@@ -6,7 +6,7 @@
     <span class="login_name roboto-medium">Регистрация</span><br>
     <a class="btn btn-dark roboto-medium" href="/login">Уже есть аккаунт? Вход→</a>
     <br><br>
-    <form action="" method="post">
+    <form action="" method="post" enctype=multipart/form-data>
         {{ form.hidden_tag() }}
         <p>
             {{ form.image_prof.label(class="roboto-medium text_login-reg") }}<br>

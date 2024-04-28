@@ -41,7 +41,7 @@ def load_user(user_id):
     return db_sess.query(User).get(user_id)
 
 
-@app.route('/product/<int:id_pr>',  methods=['GET', 'POST'])
+@app.route('/product/<int:id_pr>', methods=['GET', 'POST'])
 def prosm_prods(id_pr):
     db_sess = db_session.create_session()
     product = db_sess.query(Product).filter(Product.id == id_pr).first()
@@ -49,13 +49,14 @@ def prosm_prods(id_pr):
     return render_template('product_item.html', prod=product, title='dgsgdssd')
 
 
-@app.route('/product',  methods=['GET', 'POST'])
+@app.route('/product', methods=['GET', 'POST'])
 def add_prods():
     form = ProductFrom()
     if request.method == 'POST' and form.validate_on_submit():
         db_sess = db_session.create_session()
         prod = Product()
         img = request.files['img_prod']
+        print(request.files)
         if img.filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS:
             filename = str(random.randint(10000000000000, 100000000000000)) + "product.jpg"
             img.save(str(os.path.join(app.config['UPLOAD_FOLDER'], filename)))
@@ -66,67 +67,8 @@ def add_prods():
         db_sess.add(prod)
         db_sess.commit()
         return redirect('/')
-    print('fdsfsdgsdg')
     return render_template('product.html', title='Добавление товара',
                            form=form)
-#
-#
-# @app.route('/jobs/<int:id>', methods=['GET', 'POST'])
-# @login_required
-# def edit_jobs(id):
-#     form = JobsForm()
-#     if request.method == "GET":
-#         db_sess = db_session.create_session()
-#         jobs = db_sess.query(Jobs).filter(Jobs.id == id,
-#                                           Jobs.team_leader == current_user.id or current_user.id == 1
-#                                           ).first()
-#         if jobs:
-#             form.team_lead.data = jobs.team_leader
-#             form.job.data = jobs.job
-#             form.worksize.data = jobs.work_size
-#             form.collaborators.data = jobs.collaborators
-#             form.start_date.data = jobs.start_date
-#             form.end_date.data = jobs.end_date
-#             form.is_finished.data = jobs.is_finished
-#         else:
-#             abort(404)
-#     if form.validate_on_submit():
-#         db_sess = db_session.create_session()
-#         jobs = db_sess.query(Jobs).filter(Jobs.id == id,
-#                                           Jobs.team_leader == current_user.id or current_user.id == 1
-#                                           ).first()
-#         if jobs:
-#             jobs.team_leader = form.team_lead.data
-#             jobs.job = form.job.data
-#             jobs.work_size = form.worksize.data
-#             jobs.collaborators = form.collaborators.data
-#             jobs.start_date = form.start_date.data
-#             jobs.end_date = form.end_date.data
-#             jobs.is_finished = form.is_finished.data
-#             db_sess.commit()
-#             return redirect('/')
-#         else:
-#             abort(404)
-#     return render_template('product.html',
-#                            title='Редактирование новости',
-#                            form=form
-#                            )
-#
-#
-# @app.route('/jobs_delete/<int:id>', methods=['GET', 'POST'])
-# @login_required
-# def jobs_delete(id):
-#     db_sess = db_session.create_session()
-#     jobs = db_sess.query(Jobs).filter(Jobs.id == id,
-#                                       Jobs.user == current_user
-#                                       ).first()
-#     if jobs:
-#         db_sess.delete(jobs)
-#         db_sess.commit()
-#     else:
-#         abort(404)
-#     return redirect('/')
-#
 
 
 @app.route("/")
@@ -134,59 +76,6 @@ def index():
     db_sess = db_session.create_session()
     producti = db_sess.query(Product).all()
     return render_template("index.html", products=producti, title='Главная')
-
-
-#
-#
-# @app.route('/departments_add/<int:id>', methods=['GET', 'POST'])
-# @login_required
-# def edit_deps(id):
-#     form = DepartmentForm()
-#     if request.method == "GET":
-#         db_sess = db_session.create_session()
-#         deps = db_sess.query(Department).filter(Department.id == id,
-#                                           Jobs.team_leader == current_user.id or current_user.id == 1
-#                                           ).first()
-#         if deps:
-#             form.title.data = deps.title
-#             form.chief.data = deps.chief
-#             form.members.data = deps.members_ids
-#             form.email.data = deps.email
-#         else:
-#             abort(404)
-#     if form.validate_on_submit():
-#         db_sess = db_session.create_session()
-#         deps = db_sess.query(Department).filter(Department.id == id,
-#                                           Jobs.team_leader == current_user.id or current_user.id == 1
-#                                           ).first()
-#         if deps:
-#             deps.title = form.title.data
-#             deps.chief = form.chief.data
-#             deps.members_ids = form.members.data
-#             deps.email = form.email.data
-#             db_sess.commit()
-#             return redirect('/departments')
-#         else:
-#             abort(404)
-#     return render_template('departments.html',
-#                            title='Редактирование департамента',
-#                            form=form
-#                            )
-#
-#
-# @app.route('/departments_delete/<int:id>', methods=['GET', 'POST'])
-# @login_required
-# def deps_delete(id):
-#     db_sess = db_session.create_session()
-#     deps = db_sess.query(Department).filter(Department.id == id,
-#                                       Department.chief == current_user.id
-#                                       ).first()
-#     if deps:
-#         db_sess.delete(deps)
-#         db_sess.commit()
-#     else:
-#         abort(404)
-#     return redirect('/departments')
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -217,27 +106,45 @@ def profile():
 
 
 @app.route('/register', methods=['GET', 'POST'])
-def reqister():
+def register():
+    # if request.method == 'POST':
+    #     img = request.files['img_prod']
+    #     db_sess = db_session.create_session()
+    #     print(img)
+    #     form = request.form
+    #
+    #     user = User(
+    #         name=form.name.data,
+    #         surname=form.surname.data,
+    #         last_name=form.lastname.data,
+    #         phone_number=form.phone_number.data,
+    #         email=form.email.data,
+    #         password=form.password.data,
+    #         img_prof=form.image_prof.data,
+    #     )
+    #     user.set_password(form.password.data)
+    #     db_sess.add(user)
+    #     db_sess.commit()
+    #     return redirect('/login')
     form = RegisterForm()
-    if form.validate_on_submit():
-        if form.password.data != form.password_again.data:
-            return render_template('register.html', title='Регистрация',
-                                   form=form,
-                                   message="Пароли не совпадают")
+    if request.method == 'POST' and form.validate_on_submit():
         db_sess = db_session.create_session()
-        if db_sess.query(User).filter(User.email == form.email.data).first():
-            return render_template('register.html', title='Регистрация',
-                                   form=form,
-                                   message="Такой пользователь уже есть")
-        user = User(
-            name=form.name.data,
-            surname=form.surname.data,
-            last_name=form.lastname.data,
-            phone_number=form.phone_number.data,
-            email=form.email.data,
-            password=form.password.data,
-            img_prof=form.image_prof.data,
-        )
+        user = User()
+        img = request.files['image_prof']
+
+        user.name = form.name.data
+        user.email = form.email.data
+        user.surname = form.surname.data
+        user.last_name = form.lastname.data
+        user.email = form.email.data
+        user.password = form.password.data
+
+        if img.filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS:
+            filename = str(random.randint(10000000000000, 100000000000000)) + "product.jpg"
+            img.save(str(os.path.join(app.config['UPLOAD_FOLDER'], filename)))
+            user.img_prof = filename
+
+        # print(img)
         user.set_password(form.password.data)
         db_sess.add(user)
         db_sess.commit()
@@ -246,8 +153,6 @@ def reqister():
 
 
 def main():
-    # app.register_blueprint(jobs_api.blueprint)
-    # app.register_blueprint(users_api.blueprint)
     app.run(port=8000)
 
 
