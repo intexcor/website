@@ -226,17 +226,21 @@ def add_review(id_pr):
             rew.id_user = current_user.id
             db_sess.add(rew)
             db_sess.commit()
-            return redirect('/')
+            return redirect(f'/reviews/{id_pr}')
         return render_template('add_rev.html', title='Добавление отзыва',
                                form=form, id_pr=id_pr)
     else:
         return render_template('error_review.html', title='Не куплен товар', id_pr=id_pr)
 
 
-@app.route("/")
+@app.route("/", methods=['GET', 'POST'])
 def index():
     db_sess = db_session.create_session()
     producti = db_sess.query(Product).all()
+    if request.method == 'POST':
+        db_sess = db_session.create_session()
+        producti = db_sess.query(Product).filter(Product.name.like(f'%{request.form['search']}%')).all()
+        return render_template("index.html", products=producti, title='Главная')
     return render_template("index.html", products=producti, title='Главная')
 
 
@@ -272,7 +276,9 @@ def logout():
 
 @app.route('/profile')
 def profile():
-    return redirect("/")
+    db_sess = db_session.create_session()
+    user = db_sess.query(User).filter(User.id == current_user.id).first()
+    return render_template('profile.html', user=user)
 
 
 @app.route('/register', methods=['GET', 'POST'])

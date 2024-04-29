@@ -20,9 +20,9 @@
 <header>
     <nav class="navbar navbar-dark">
         <a class="navbar-brand brand_name roboto-medium" href="/">AWILU</a>
-        <form class="navbar-form navbar-right form-poisk" role="search">
+        <form action="/" method="POST" enctype="multipart/form-data" class="navbar-form navbar-right form-poisk" role="search">
 	        <div class="form-group">
-		        <input type="text" class="form-control poisk" placeholder="Найти">
+		        <input type="text" name="search" class="form-control poisk" placeholder="Найти">
 	        </div>
         </form>
         {% if current_user.is_authenticated %}
