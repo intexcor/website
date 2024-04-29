@@ -1,12 +1,13 @@
 import sqlalchemy
 from flask_login import UserMixin
+from sqlalchemy_serializer import SerializerMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from .db_session import SqlAlchemyBase
 from sqlalchemy import orm
 user = orm.relationship("Reviews", back_populates='user')
 
 
-class User(SqlAlchemyBase, UserMixin):
+class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     __tablename__ = 'users'
 
     id = sqlalchemy.Column(sqlalchemy.Integer,
@@ -18,7 +19,7 @@ class User(SqlAlchemyBase, UserMixin):
     email = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     password = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     img_prof = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-    favorite_prods = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    korzina = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     purch_prods = sqlalchemy.Column(sqlalchemy.String, nullable=True)
 
     def set_password(self, password):

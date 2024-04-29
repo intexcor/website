@@ -1,0 +1,50 @@
+.main_block {
+    margin-top: 10px;
+    border: 3px solid #5f5f5f;
+    border-radius: 15px;
+    background-color: #dadada;
+    overflow: auto;
+}
+
+.break {
+  word-break: break-all;
+}
+
+.cancel {
+  word-break: break-word;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.rasp_tx {
+    margin-left: 10px;
+}
+
+.rasp_naz {
+    text-align: start;
+    margin: 10px 10px;
+    margin-bottom: 0;
+}
+
+.rasp_kn {
+    margin: 10px 10px;
+}
+
+.sam_rew {
+    margin-top: 10px;
+    border: 3px solid #5f5f5f;
+    border-radius: 15px;
+    background-color: #dadada;
+}
+
+.add_rev_text {
+    height: 80px;
+}
+
+.rev_align {
+    text-align: center;
+}
+
+.rasp_img {
+    margin: 10px 10px;
+}

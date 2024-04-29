@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="main_block">
+    <a class="btn btn-dark roboto-medium rasp_img" href="/product/{{ prod }}">←Назад</a>
+    <a class="btn btn-dark roboto-medium rasp_img" href="/add_review/{{ prod }}">Добавить отзыв</a>
+    {% if reviews %}
+        {% for item in reviews%}
+            <div class="sam_rew">
+                <a href="/product/{{ item.id }}"></a>
+                <div class="">
+                    <img class="img_t rasp_img" src="{{ url_for('static', filename='img/reviews/' + item.img_rew) }}">
+                    <h2 class="rasp_tx break cancel">{{ item.text_rew }}</h2>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="rev_align">
+            <h1 class="login_name roboto-medium">Нет отзывов</h1>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

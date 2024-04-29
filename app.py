@@ -4,12 +4,15 @@ import random
 from flask import Flask, render_template, redirect, abort, request, jsonify
 
 from forms.user import RegisterForm
-from data import db_session, jobs_api, users_api
+from data import db_session, product_api, users_api
 from data.users import User
 from data.products import Product
 from data.reviews import Reviews
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from forms.product import ProductFrom
+from forms.review import ReviewForm
+from forms.buying import BuyingForm
+from forms.buying_all import BuyingAllForm
 
 from forms.loginforn import LoginForm
 from flask import make_response
@@ -45,7 +48,6 @@ def load_user(user_id):
 def prosm_prods(id_pr):
     db_sess = db_session.create_session()
     product = db_sess.query(Product).filter(Product.id == id_pr).first()
-    print(product)
     return render_template('product_item.html', prod=product, title='dgsgdssd')
 
 
@@ -66,67 +68,169 @@ def add_prods():
         db_sess.add(prod)
         db_sess.commit()
         return redirect('/')
-    print('fdsfsdgsdg')
     return render_template('product.html', title='Добавление товара',
                            form=form)
-#
-#
-# @app.route('/jobs/<int:id>', methods=['GET', 'POST'])
-# @login_required
-# def edit_jobs(id):
-#     form = JobsForm()
-#     if request.method == "GET":
-#         db_sess = db_session.create_session()
-#         jobs = db_sess.query(Jobs).filter(Jobs.id == id,
-#                                           Jobs.team_leader == current_user.id or current_user.id == 1
-#                                           ).first()
-#         if jobs:
-#             form.team_lead.data = jobs.team_leader
-#             form.job.data = jobs.job
-#             form.worksize.data = jobs.work_size
-#             form.collaborators.data = jobs.collaborators
-#             form.start_date.data = jobs.start_date
-#             form.end_date.data = jobs.end_date
-#             form.is_finished.data = jobs.is_finished
-#         else:
-#             abort(404)
-#     if form.validate_on_submit():
-#         db_sess = db_session.create_session()
-#         jobs = db_sess.query(Jobs).filter(Jobs.id == id,
-#                                           Jobs.team_leader == current_user.id or current_user.id == 1
-#                                           ).first()
-#         if jobs:
-#             jobs.team_leader = form.team_lead.data
-#             jobs.job = form.job.data
-#             jobs.work_size = form.worksize.data
-#             jobs.collaborators = form.collaborators.data
-#             jobs.start_date = form.start_date.data
-#             jobs.end_date = form.end_date.data
-#             jobs.is_finished = form.is_finished.data
-#             db_sess.commit()
-#             return redirect('/')
-#         else:
-#             abort(404)
-#     return render_template('product.html',
-#                            title='Редактирование новости',
-#                            form=form
-#                            )
-#
-#
-# @app.route('/jobs_delete/<int:id>', methods=['GET', 'POST'])
-# @login_required
-# def jobs_delete(id):
-#     db_sess = db_session.create_session()
-#     jobs = db_sess.query(Jobs).filter(Jobs.id == id,
-#                                       Jobs.user == current_user
-#                                       ).first()
-#     if jobs:
-#         db_sess.delete(jobs)
-#         db_sess.commit()
-#     else:
-#         abort(404)
-#     return redirect('/')
-#
+
+
+@app.route('/korzina/<int:id_pr>',  methods=['GET', 'POST'])
+@login_required
+def korz_add(id_pr):
+    db_sess = db_session.create_session()
+    us = db_sess.query(User).filter(User.id == current_user.id).first()
+    if not us.korzina:
+        us.korzina = f'{id_pr}#1'
+    else:
+        spis = us.korzina.split(', ')
+        spis_ = [i.split('#') for i in spis]
+        spisi = []
+        f = True
+        for i in spis_:
+            if str(id_pr) == i[0]:
+                spisi.append(f'{i[0]}#{str(int(i[1]) + 1)}')
+                f = False
+            else:
+                spisi.append(f'{i[0]}#{i[1]}')
+        if f:
+            spisi.append(f'{id_pr}#1')
+        us.korzina = ', '.join(spisi)
+    db_sess.commit()
+    return redirect(f'/product/{id_pr}')
+
+
+@app.route('/korzina_delete/<int:id_pr>',  methods=['GET', 'POST'])
+@login_required
+def korz_delete(id_pr):
+    db_sess = db_session.create_session()
+    us = db_sess.query(User).filter(User.id == current_user.id).first()
+    if us.korzina is None:
+        redirect('/korzina')
+    else:
+        spis = us.korzina.split(', ')
+        spis_ = [i.split('#') for i in spis]
+        spisi = []
+        f = True
+        for i in spis_:
+            if str(id_pr) != i[0]:
+                spisi.append(f'{i[0]}#{i[1]}')
+        us.korzina = ', '.join(spisi)
+    db_sess.commit()
+    return redirect('/korzina')
+
+
+@app.route('/korzina',  methods=['GET', 'POST'])
+@login_required
+def korz_all():
+    db_sess = db_session.create_session()
+    us = db_sess.query(User).filter(User.id == current_user.id).first()
+    slov = {}
+    print(us.korzina)
+    if us.korzina:
+        spis_ids = [i.split('#')[0] for i in us.korzina.split(', ')]
+        korz_t = db_sess.query(Product).filter(Product.id.in_(spis_ids)).all()
+        slov_k = dict([i.split('#') for i in us.korzina.split(', ')])
+        for i in korz_t:
+            slov[i] = slov_k[str(i.id)]
+        print(slov)
+    return render_template('korzina.html', korz=slov.items())
+
+
+@app.route('/korzina_add/<int:id>/<string:plus>',  methods=['GET', 'POST'])
+@login_required
+def korz_add_minus(id, plus):
+    print(plus, type(plus))
+    db_sess = db_session.create_session()
+    us = db_sess.query(User).filter(User.id == current_user.id).first()
+    spis = us.korzina.split(', ')
+    spis_ = [i.split('#') for i in spis]
+    spisi = []
+    f = True
+    for i in spis_:
+        if str(id) == i[0]:
+            spisi.append(f'{i[0]}#{str(int(i[1]) + int(plus))}')
+            f = False
+        else:
+            spisi.append(f'{i[0]}#{i[1]}')
+    if f:
+        spisi.append(f'{id}#1')
+    us.korzina = ', '.join(spisi)
+    db_sess.commit()
+    return redirect('/korzina')
+
+
+@app.route('/buying/<int:id_pr>',  methods=['GET', 'POST'])
+@login_required
+def buying(id_pr):
+    form = BuyingForm()
+    db_sess = db_session.create_session()
+    product = db_sess.query(Product).filter(Product.id == id_pr).first()
+    if request.method == 'POST' and form.validate_on_submit():
+        db_sess = db_session.create_session()
+        us = db_sess.query(User).filter(User.id == current_user.id).first()
+        if us.purch_prods is None:
+            us.purch_prods = f'{id_pr}'
+        else:
+            us.purch_prods += f', {id_pr}'
+        db_sess.commit()
+        return redirect('/')
+    return render_template('buying.html', title='Покупка',
+                           form=form, price=product.price)
+
+
+@app.route('/buying_korz',  methods=['GET', 'POST'])
+@login_required
+def buyingAll():
+    form = BuyingAllForm()
+    db_sess = db_session.create_session()
+    us = db_sess.query(User).filter(User.id == current_user.id).first()
+    slov = {}
+    if us.korzina:
+        spis_ids = [i.split('#')[0] for i in us.korzina.split(', ')]
+        korz_t = db_sess.query(Product).filter(Product.id.in_(spis_ids)).all()
+        slov_k = dict([i.split('#') for i in us.korzina.split(', ')])
+        for i in korz_t:
+            slov[i] = slov_k[str(i.id)]
+    sum = 0
+    for i, j in slov.items():
+        sum += i.price * int(j)
+    if request.method == 'POST' and form.validate_on_submit():
+        db_sess = db_session.create_session()
+        us = db_sess.query(User).filter(User.id == current_user.id).first()
+        spis_ids = [f', {i.id}' * int(j) for i, j in slov.items()]
+        print(spis_ids)
+        if us.purch_prods is None:
+            us.purch_prods = f'{''.join(spis_ids)}'
+        else:
+            us.purch_prods += f'{''.join(spis_ids)}'
+        us.korzina = None
+        db_sess.commit()
+        return redirect('/')
+    return render_template('buying_all.html', title='Покупка',
+                           form=form, price=sum)
+
+
+@app.route('/add_review/<int:id_pr>',  methods=['GET', 'POST'])
+@login_required
+def add_review(id_pr):
+    if current_user.purch_prods and str(id_pr) in current_user.purch_prods.split(', '):
+        form = ReviewForm()
+        if request.method == 'POST' and form.validate_on_submit():
+            db_sess = db_session.create_session()
+            rew = Reviews()
+            img = request.files['img_rev']
+            if img.filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS:
+                filename = str(random.randint(10000000000000, 100000000000000)) + "review.jpg"
+                img.save(str(os.path.join('static/img/reviews', filename)))
+                rew.img_rew = filename
+            rew.text_rew = form.text.data
+            rew.id_prod = id_pr
+            rew.id_user = current_user.id
+            db_sess.add(rew)
+            db_sess.commit()
+            return redirect('/')
+        return render_template('add_rev.html', title='Добавление отзыва',
+                               form=form, id_pr=id_pr)
+    else:
+        return render_template('error_review.html', title='Не куплен товар', id_pr=id_pr)
 
 
 @app.route("/")
@@ -136,57 +240,12 @@ def index():
     return render_template("index.html", products=producti, title='Главная')
 
 
-#
-#
-# @app.route('/departments_add/<int:id>', methods=['GET', 'POST'])
-# @login_required
-# def edit_deps(id):
-#     form = DepartmentForm()
-#     if request.method == "GET":
-#         db_sess = db_session.create_session()
-#         deps = db_sess.query(Department).filter(Department.id == id,
-#                                           Jobs.team_leader == current_user.id or current_user.id == 1
-#                                           ).first()
-#         if deps:
-#             form.title.data = deps.title
-#             form.chief.data = deps.chief
-#             form.members.data = deps.members_ids
-#             form.email.data = deps.email
-#         else:
-#             abort(404)
-#     if form.validate_on_submit():
-#         db_sess = db_session.create_session()
-#         deps = db_sess.query(Department).filter(Department.id == id,
-#                                           Jobs.team_leader == current_user.id or current_user.id == 1
-#                                           ).first()
-#         if deps:
-#             deps.title = form.title.data
-#             deps.chief = form.chief.data
-#             deps.members_ids = form.members.data
-#             deps.email = form.email.data
-#             db_sess.commit()
-#             return redirect('/departments')
-#         else:
-#             abort(404)
-#     return render_template('departments.html',
-#                            title='Редактирование департамента',
-#                            form=form
-#                            )
-#
-#
-# @app.route('/departments_delete/<int:id>', methods=['GET', 'POST'])
-# @login_required
-# def deps_delete(id):
-#     db_sess = db_session.create_session()
-#     deps = db_sess.query(Department).filter(Department.id == id,
-#                                       Department.chief == current_user.id
-#                                       ).first()
-#     if deps:
-#         db_sess.delete(deps)
-#         db_sess.commit()
-#     else:
-#         abort(404)
-#     return redirect('/departments')
+@app.route("/reviews/<int:id_pr>", methods=['GET', 'POST'])
+def reviews(id_pr):
+    db_sess = db_session.create_session()
+    product = db_sess.query(Product).get(id_pr)
+    rews = db_sess.query(Reviews).filter(Reviews.id_prod == product.id).all()
+    return render_template("reviews.html", reviews=rews, title=f'Отзывы на товар {product.name}', prod=product.id)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -219,7 +278,7 @@ def profile():
 @app.route('/register', methods=['GET', 'POST'])
 def reqister():
     form = RegisterForm()
-    if form.validate_on_submit():
+    if request.method == 'POST' and form.validate_on_submit():
         if form.password.data != form.password_again.data:
             return render_template('register.html', title='Регистрация',
                                    form=form,
@@ -229,6 +288,10 @@ def reqister():
             return render_template('register.html', title='Регистрация',
                                    form=form,
                                    message="Такой пользователь уже есть")
+        img = request.files['image_prof']
+        if img.filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS:
+            filename = str(random.randint(10000000000000, 100000000000000)) + "user.jpg"
+            img.save(str(os.path.join('static/img/users', filename)))
         user = User(
             name=form.name.data,
             surname=form.surname.data,
@@ -236,7 +299,7 @@ def reqister():
             phone_number=form.phone_number.data,
             email=form.email.data,
             password=form.password.data,
-            img_prof=form.image_prof.data,
+            img_prof=filename,
         )
         user.set_password(form.password.data)
         db_sess.add(user)
@@ -246,9 +309,9 @@ def reqister():
 
 
 def main():
-    # app.register_blueprint(jobs_api.blueprint)
-    # app.register_blueprint(users_api.blueprint)
-    app.run(port=8000)
+    app.register_blueprint(product_api.blueprint)
+    app.register_blueprint(users_api.blueprint)
+    app.run(port=8080)
 
 
 if __name__ == '__main__':

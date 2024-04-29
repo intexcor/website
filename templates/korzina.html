@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="main_block">
+    <a class="btn btn-dark roboto-medium rasp_img" href="/">←Назад</a>
+    {% if korz %}
+        {% for item in korz%}
+            <div class="sam_rew">
+                <a href="/product/{{ item[0].id }}">Товар</a>
+                <div class="">
+                    <img class="img_t rasp_img" src="{{ url_for('static', filename='img/products/' + item[0].img_prod) }}">
+                    <h2 class="rasp_tx break cancel">{{ item[0].name }}</h2>
+                    <p class="roboto-medium desc_prod"> <strong>Описание:</strong> {{ item[0].description }}</p>
+                    <h2 class="rasp_tx break cancel">Количество: {{ item[1] }} шт.</h2>
+                    <h2 class="rasp_tx break cancel">Цена: {{ item[0].price }} шт.</h2>
+                    <div class="rasp_kn">
+                        {% if item[1] | int < 2%}
+                            <a href="/korzina_add/{{ item[0].id }}/1" class="btn btn-danger">+1</a>
+                            <a href="/korzina_delete/{{ item[0].id }}" class="btn btn-danger">Удалить из корзины</a>
+                        {% else %}
+                            <a href="/korzina_add/{{ item[0].id }}/1" class="btn btn-danger">+1</a>
+                            <a href="/korzina_add/{{ item[0].id }}/-1" class="btn btn-danger">-1</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        <a href="/buying_korz" class="btn btn-dark">Оплатить</a>
+    {% else %}
+        <div class="rev_align">
+            <h1 class="login_name roboto-medium">Нет товаров в корзине</h1>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

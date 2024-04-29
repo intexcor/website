@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<br>
+<div class="login">
+    <span class="login_name roboto-medium">Покупка</span><br><br>
+    <form action="" method="post" enctype=multipart/form-data>
+        {{ form.hidden_tag() }}
+        <div class="login_name roboto-medium">Сумма: {{ price }}</div>
+        <p>{{ form.submit(type="submit", class="btn btn-dark btn_size roboto-medium") }}</p>
+            <div class="login_name roboto-medium">{{ message }}</div>
+    </form>
+</div>
+{% endblock %}

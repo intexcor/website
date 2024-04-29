@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<link rel="stylesheet" href="{{url_for('static', filename='css/product_item.css')}}">
+<div class="main_block">
+    <a class="btn btn-dark roboto-medium btn_item_prod" href="/">←Назад</a>
+    <div class="naming">
+        <a href="{{ url_for('static', filename='img/products/' + prod.img_prod) }}">
+            <img class="img_prod_item" src="{{ url_for('static', filename='img/products/' + prod.img_prod) }}">
+        </a>
+        <div class="name_desc">
+            <h1 class="roboto-medium name_prod">{{ prod.name }}</h1>
+            <p class="roboto-medium desc_prod"> <strong>Описание:</strong> {{ prod.description }}</p>
+            <a href="/reviews/{{ prod.id }}" class="btn btn-dark roboto-medium btn_reviews">Отзывы</a>
+            <p class="roboto-medium desc_prod price">{{ prod.price }}₽</p>
+            <div class="buying">
+                <a href="/buying/{{ prod.id }}" class="btn btn-dark roboto-medium btn_buy">Купить</a>
+                <a href="/korzina/{{ prod.id }}" class="btn btn-dark roboto-medium btn_kor">В корзину</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock content %}

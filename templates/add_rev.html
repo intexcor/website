@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+<br>
+<div class="login">
+    <div class="rasp_naz">
+        <a class="btn btn-dark roboto-medium rasp_naz" href="/reviews/{{ id_pr }}">←Назад</a>
+    </div>
+    <span class="login_name roboto-medium">Отзыв</span><br><br>
+    <form action="" method="post" enctype=multipart/form-data>
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.img_rev.label(class="roboto-medium text_login-reg") }}<br>
+            {{ form.img_rev }}<br>
+            {% for error in form.img_rev.errors %}
+                <p class="alert alert-danger" role="alert">
+                    {{ error }}
+                </p>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.text.label(class="roboto-medium text_login-reg") }}<br>
+            {{ form.text(cols="11", rows="11", class="form-control polya_vvod") }}<br>
+            {% for error in form.text.errors %}
+                <p class="alert alert-danger" role="alert">
+                    {{ error }}
+                </p>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit(type="submit", class="btn btn-dark btn_size roboto-medium") }}</p>
+            <div class="login_name roboto-medium">{{ message }}</div>
+    </form>
+</div>
+{% endblock %}
