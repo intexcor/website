@@ -30,8 +30,7 @@ login_manager.init_app(app)
 
 @app.errorhandler(404)
 def not_found(error):
-    # return make_response(jsonify({'error': 'Not found'}), 404)
-    return render_template("errors.html", error="Not found")
+    return make_response(jsonify({'error': 'Not found'}), 404)
 
 
 @app.errorhandler(400)
@@ -64,13 +63,10 @@ def add_prods():
         db_sess = db_session.create_session()
         prod = Product()
         img = request.files['img_prod']
-        if img:
-            if img.filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS:
-                filename = str(random.randint(10000000000000, 100000000000000)) + "product.jpg"
-                img.save(str(os.path.join(app.config['UPLOAD_FOLDER'], filename)))
-                prod.img_prod = filename
-        else:
-            prod.img_prod = "photo.png"
+        if img.filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS:
+            filename = str(random.randint(10000000000000, 100000000000000)) + "product.jpg"
+            img.save(str(os.path.join(app.config['UPLOAD_FOLDER'], filename)))
+            prod.img_prod = filename
         prod.name = form.name_ooo.data
         prod.description = form.description.data
         prod.price = form.price.data
@@ -207,9 +203,9 @@ def buyingAll():
         spis_ids = [f', {i.id}' * int(j) for i, j in slov.items()]
         print(spis_ids)
         if us.purch_prods is None:
-            us.purch_prods = f'{''.join(spis_ids)}'
+            us.purch_prods = f"{''.join(spis_ids)}"
         else:
-            us.purch_prods += f'{''.join(spis_ids)}'
+            us.purch_prods += f"{''.join(spis_ids)}"
         us.korzina = None
         db_sess.commit()
         return redirect('/')
@@ -226,13 +222,10 @@ def add_review(id_pr):
             db_sess = db_session.create_session()
             rew = Reviews()
             img = request.files['img_rev']
-            if img:
-                if img.filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS:
-                    filename = str(random.randint(10000000000000, 100000000000000)) + "review.jpg"
-                    img.save(str(os.path.join('static/img/reviews', filename)))
-                    rew.img_rew = filename
-            if img:
-                rew.img_rew = "photo.png"
+            if img.filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS:
+                filename = str(random.randint(10000000000000, 100000000000000)) + "review.jpg"
+                img.save(str(os.path.join('static/img/reviews', filename)))
+                rew.img_rew = filename
             rew.text_rew = form.text.data
             rew.id_prod = id_pr
             rew.id_user = current_user.id
@@ -251,7 +244,7 @@ def index():
     producti = db_sess.query(Product).all()
     if request.method == 'POST':
         db_sess = db_session.create_session()
-        producti = db_sess.query(Product).filter(Product.name.like(f'%{request.form['search']}%')).all()
+        producti = db_sess.query(Product).filter(Product.name.like(f"%{request.form['search']}%")).all()
         return render_template("index.html", products=producti, title='Главная')
     return render_template("index.html", products=producti, title='Главная')
 
@@ -307,12 +300,9 @@ def reqister():
                                    form=form,
                                    message="Такой пользователь уже есть")
         img = request.files['image_prof']
-        if img:
-            if img.filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS:
-                filename = str(random.randint(10000000000000, 100000000000000)) + "user.jpg"
-                img.save(str(os.path.join('static/img/users', filename)))
-        else:
-            filename = "photo.png"
+        if img.filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS:
+            filename = str(random.randint(10000000000000, 100000000000000)) + "user.jpg"
+            img.save(str(os.path.join('static/img/users', filename)))
         user = User(
             name=form.name.data,
             surname=form.surname.data,
@@ -332,7 +322,7 @@ def reqister():
 def main():
     app.register_blueprint(product_api.blueprint)
     app.register_blueprint(users_api.blueprint)
-    app.run(port=8080)
+    app.run(host='0.0.0.0')
 
 
 if __name__ == '__main__':
