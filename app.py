@@ -38,6 +38,11 @@ def bad_request(_):
     return make_response(jsonify({'error': 'Bad Request'}), 400)
 
 
+@app.errorhandler(401)
+def bad_request(_):
+    return redirect('/login')
+
+
 @login_manager.user_loader
 def load_user(user_id):
     db_sess = db_session.create_session()
