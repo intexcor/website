@@ -30,7 +30,8 @@ login_manager.init_app(app)
 
 @app.errorhandler(404)
 def not_found(error):
-    return make_response(jsonify({'error': 'Not found'}), 404)
+    # return make_response(jsonify({'error': 'Not found'}), 404)
+    return render_template("errors.html", error="Not found")
 
 
 @app.errorhandler(400)
@@ -63,10 +64,13 @@ def add_prods():
         db_sess = db_session.create_session()
         prod = Product()
         img = request.files['img_prod']
-        if img.filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS:
-            filename = str(random.randint(10000000000000, 100000000000000)) + "product.jpg"
-            img.save(str(os.path.join(app.config['UPLOAD_FOLDER'], filename)))
-            prod.img_prod = filename
+        if img:
+            if img.filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS:
+                filename = str(random.randint(10000000000000, 100000000000000)) + "product.jpg"
+                img.save(str(os.path.join(app.config['UPLOAD_FOLDER'], filename)))
+                prod.img_prod = filename
+        else:
+            prod.img_prod = "photo.png"
         prod.name = form.name_ooo.data
         prod.description = form.description.data
         prod.price = form.price.data
@@ -222,10 +226,13 @@ def add_review(id_pr):
             db_sess = db_session.create_session()
             rew = Reviews()
             img = request.files['img_rev']
-            if img.filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS:
-                filename = str(random.randint(10000000000000, 100000000000000)) + "review.jpg"
-                img.save(str(os.path.join('static/img/reviews', filename)))
-                rew.img_rew = filename
+            if img:
+                if img.filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS:
+                    filename = str(random.randint(10000000000000, 100000000000000)) + "review.jpg"
+                    img.save(str(os.path.join('static/img/reviews', filename)))
+                    rew.img_rew = filename
+            if img:
+                rew.img_rew = "photo.png"
             rew.text_rew = form.text.data
             rew.id_prod = id_pr
             rew.id_user = current_user.id
@@ -300,9 +307,12 @@ def reqister():
                                    form=form,
                                    message="Такой пользователь уже есть")
         img = request.files['image_prof']
-        if img.filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS:
-            filename = str(random.randint(10000000000000, 100000000000000)) + "user.jpg"
-            img.save(str(os.path.join('static/img/users', filename)))
+        if img:
+            if img.filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS:
+                filename = str(random.randint(10000000000000, 100000000000000)) + "user.jpg"
+                img.save(str(os.path.join('static/img/users', filename)))
+        else:
+            filename = "photo.png"
         user = User(
             name=form.name.data,
             surname=form.surname.data,
