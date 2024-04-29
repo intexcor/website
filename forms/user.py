@@ -1,11 +1,11 @@
 from flask_wtf import FlaskForm
-from flask_wtf.file import FileAllowed
-from wtforms import PasswordField, StringField, SubmitField, EmailField, IntegerField, FileField
+from flask_wtf.file import FileAllowed, FileField
+from wtforms import PasswordField, StringField, SubmitField, EmailField, IntegerField
 from wtforms.validators import DataRequired
 
 
 class RegisterForm(FlaskForm):
-    image_prof = FileField('Аватар', validators=[FileAllowed(['jpg', 'jpeg', 'png'])])
+    image_prof = FileField('Аватар', validators=[FileAllowed(['jpg', 'jpeg', 'png'], DataRequired())])
     name = StringField('Имя', validators=[DataRequired()])
     surname = StringField('Фамилия', validators=[DataRequired()])
     lastname = StringField('Отчество', validators=[DataRequired()])
